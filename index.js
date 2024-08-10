@@ -24,6 +24,7 @@ let velocityY = 0;
 let initialVelocityY = -8; 
 let gravity = 0.4;
 let score = 0;
+let highScore = 0;
 let maxScore = 0;
 let gameOver = false;
 window.onload = function() {
@@ -41,6 +42,7 @@ window.onload = function() {
   doodlerLeftImg.src = "./images/doodler-left.png";
   platformImg = new Image();
   platformImg.src = "./images/platform.png";
+  highScore = Number(localStorage.getItem("high-score")) || 0;
   velocityY = initialVelocityY;
   placePlatforms();
   requestAnimationFrame(update);
@@ -73,9 +75,10 @@ function update(){
   }
   updateScore();
   context.fillStyle = "black";
-  context.font = "16px sans-serif";
+  context.font = "15px sans-serif";
   context.fillText(score, 5, 20);
-  if(gameOver) 
+  context.fillText("Top Score " + highScore, 5, 42); 
+  if(gameOver)
     context.fillText("Game Over: Press 'Space' to Restart", boardWidth/7, boardHeight*7/8);
 }
 function moveDoodler(e){
@@ -149,4 +152,8 @@ function updateScore(){
     if(score < maxScore) score = maxScore;
   }
   else if(velocityY >= 0) maxScore -= points;
+  if(score > highScore){
+    highScore = score;
+    localStorage.setItem("high-score", highScore);
+  }
 }
