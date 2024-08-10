@@ -20,6 +20,7 @@ let platformArray = [];
 let platformWidth = 60;
 let platformHeight = 18;
 let platformImg;
+let paltformBrokenImg;
 let velocityY = 0;
 let initialVelocityY = -8; 
 let gravity = 0.4;
@@ -42,6 +43,8 @@ window.onload = function() {
   doodlerLeftImg.src = "./images/doodler-left.png";
   platformImg = new Image();
   platformImg.src = "./images/platform.png";
+  platformBrokenImg = new Image();
+  platformBrokenImg.src = "./images/platform-broken.png";
   highScore = Number(localStorage.getItem("high-score")) || 0;
   velocityY = initialVelocityY;
   placePlatforms();
@@ -64,8 +67,10 @@ function update(){
     if(velocityY < 0 && doodler.y > platform.height*3/4){
       platform.y -= initialVelocityY;
     }
-    if(detectCollision(doodler, platform) && velocityY >= 0){
+    if(detectCollision(doodler, platform) && velocityY >= 0 && !platform.broken){
       velocityY = initialVelocityY;
+      platform.img = platformBrokenImg;
+      platform.broken = true;
     }
     context.drawImage(platform.img, platform.x, platform.y, platform.width, platform.height);
   }
@@ -113,7 +118,8 @@ function placePlatforms(){
     x: boardWidth/2,
     y: boardHeight - 50,
     width: platformWidth,
-    height: platformHeight
+    height: platformHeight,
+    broken: false
   }
   platformArray.push(platform);
   for(let i = 0; i < 6; i++){
@@ -123,7 +129,8 @@ function placePlatforms(){
       x: randomX,
       y: boardHeight - 75*i - 150,
       width: platformWidth,
-      height: platformHeight
+      height: platformHeight,
+      broken: false
     }
     platformArray.push(platform);
   }
@@ -135,7 +142,8 @@ function newPlatform(){
     x: randomX,
     y: -platformHeight,
     width: platformWidth,
-    height: platformHeight
+    height: platformHeight,
+    broken: false
   }
   platformArray.push(platform);
 }
